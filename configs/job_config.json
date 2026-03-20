@@ -1,0 +1,16 @@
+{
+  "job": {
+    "app_name": "PySparkETL",
+    "batch_date": "2026-03-20",
+    "debug_mode": true
+  },
+  "paths": {
+    "bronze": "data/bronze/",
+    "silver": "data/silver/",
+    "raw": "data/raw/"
+  },
+  "spark": {
+    "shuffle_partitions": 4,
+    "sql_adaptive_enabled": true
+  }
+}
