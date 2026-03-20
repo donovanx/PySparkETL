@@ -1,0 +1,2 @@
+2026-03-20 23:59 - INFO - Error starting Spark session: [JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number.
+2026-03-21 00:00 - ERROR - Error starting Spark session: [JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number.

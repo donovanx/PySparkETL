@@ -1,6 +1,11 @@
 {
   "job": {
+    "environment" : "dev",
     "app_name": "PySparkETL",
+    "master": "local[*]",
+    "spark.executor.memory": "4",
+    "spark.driver.memory": "4",
+    "spark.sql.shuffle.partitions": "50",
     "batch_date": "2026-03-20",
     "debug_mode": true
   },
