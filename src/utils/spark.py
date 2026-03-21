@@ -1,6 +1,8 @@
 from pyspark.sql import SparkSession
 import json
 from pathlib import Path
+import sys
+sys.path.insert(1, 'src/utils')
 from log import log_info, log_error
 
 with open(r"/Users/donovan/Documents/PySparkETL/configs/job_config.json") as f:
@@ -22,7 +24,3 @@ def getSpark():
 
     except Exception as e:
         log_error(f"Error starting Spark session: {e}")
-
-
-
-getSpark()
