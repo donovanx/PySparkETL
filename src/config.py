@@ -1,0 +1,23 @@
+from dotenv import load_dotenv
+import os
+path_parts = os.getcwd()
+env_path = os.path.join(path_parts, '.env.dev')
+print(env_path)
+load_dotenv(env_path)
+
+API_URL_COMPETITIONS       = os.getenv("API_URL_COMPETITIONS")
+API_KEY                    = os.getenv("API_KEY")
+API_URL_STATUS             = os.getenv("API_URL_STATUS")
+API_URL_TIMEZONE           = os.getenv("API_URL_TIMEZONE")
+API_URL_SEASONS            = os.getenv("API_URL_SEASONS")
+API_URL_COMPETITIONS       = os.getenv("API_URL_COMPETITIONS")
+API_URL_CIRCUITS           = os.getenv("API_URL_CIRCUITS")
+API_URL_TEAMS              = os.getenv("API_URL_TEAMS")
+API_URL_DRIVERS            = os.getenv("API_URL_DRIVERS")
+API_URL_RACES              = os.getenv("API_URL_RACES")
+API_URL_RANKINGS_TEAMS     = os.getenv("API_URL_RANKINGS_TEAMS")
+API_URL_RANKINGS_DRIVERS   = os.getenv("API_URL_RANKINGS_DRIVERS")
+API_URL_RANKINGS_RACES     = os.getenv("API_URL_RANKINGS_RACES")
+API_URL_RANKINGS_FASTLAPS  = os.getenv("API_URL_RANKINGS_FASTLAPS")
+API_URL_RANKINGS_STARTGRID = os.getenv("API_URL_RANKINGS_STARTGRID")
+API_URL_PITSTOPS           = os.getenv("API_URL_PITSTOPS")

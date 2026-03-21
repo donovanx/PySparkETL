@@ -1,0 +1,2 @@
+2026-03-21 14:08 - DEBUG - Starting new HTTPS connection (1): v1.formula-1.api-sports.io:443
+2026-03-21 14:08 - DEBUG - https://v1.formula-1.api-sports.io:443 "GET /competitions HTTP/1.1" 200 None
