@@ -22,35 +22,41 @@ class ETL_Raw():
         self.table_name = table_name
 
 
-    def fetch_api_data(self) -> list:
+    def fetch_api_data(self, param_name: str = None, parameters: list = None) -> list:
+        """Fetches API data
+        Args:
+            param_name (str): name of the parameter to pass to the api
+            parameters (list): list of parameter values e.g. [2011, 2012, 2013]
+        Returns:
+            list: list of data, so list of jsons [{},{}]
+        """
         try:
-            """Fetches API data
+            headers = {'x-apisports-key': self.api_key}
 
-            Args:
-                url (str): url of the api
-                api_key (str): api key needed to make requests
+            if parameters and param_name:
+                # Bug fix: you were referencing `params` before it was defined
+                params = [(param_name, p) for p in parameters]
+            else:
+                params = None
 
-            Returns:
-                list: list of data, so list of jsons [{},{}]
-            """
-            source = self.url
-            payload={}
-            headers = {
-            'x-apisports-key': self.api_key,
-            }
-
-            response = requests.request("GET", source, headers=headers, data=payload)
-
+            response = requests.get(self.url, headers=headers, params=params)
+            response.raise_for_status()  # raises an error on bad status codes (4xx, 5xx)
             return response.json()["response"]
 
-        except:
-            log_error("Error fetching api data.")
+        except requests.exceptions.HTTPError as e:
+            log_error(f"HTTP error fetching data from {self.url}: {e}")
+        except requests.exceptions.RequestException as e:
+            log_error(f"Request error fetching data from {self.url}: {e}")
+        except KeyError:
+            log_error(f"Unexpected response format from {self.url}")
+
+        return []  # return empty list instead of None on failure
 
 
 
     def first_extract_from_api(
         self,
-        schema: StructType = None
+        schema: StructType = None, param_name: str = None, parameters: list = None
     ) -> DataFrame:
         """
         Creates a Spark DataFrame from an API response list.
