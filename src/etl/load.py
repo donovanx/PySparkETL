@@ -11,11 +11,12 @@ import json
 
 def get_seasons_from_raw(spark, path):
     df = spark.read.format("parquet").load(path)
-    return [row["season"] for row in df.select("season").collect()]
+    df = df.withColumnRenamed("_corrupt_record", "seasons")
+    return [row["seasons"] for row in df.select("seasons").collect()]
 
 def get_races_from_raw(spark, path):
     df = spark.read.format("parquet").load(path)
-    return [row["race_id"] for row in df.select("race_id").collect()]
+    return [row["id"] for row in df.select("id").collect()]
 
 
 
@@ -23,4 +24,5 @@ def read_raw(path: str) -> DataFrame:
     spark = getSpark()
     df = spark.read.parquet(path)
     return df
+
 

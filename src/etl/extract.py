@@ -22,7 +22,7 @@ class ETL_Raw():
         self.table_name = table_name
 
 
-    def fetch_api_data(self, param_name: str = None, parameters: list = None) -> list:
+    def fetch_api_data(self, param_name: str = None, parameters: int = None) -> list:
         """Fetches API data
         Args:
             param_name (str): name of the parameter to pass to the api
@@ -33,14 +33,13 @@ class ETL_Raw():
         try:
             headers = {'x-apisports-key': self.api_key}
 
-            if parameters and param_name:
-                # Bug fix: you were referencing `params` before it was defined
-                params = [(param_name, p) for p in parameters]
-            else:
-                params = None
+            # if parameters and param_name:
+            #     params = [(param_name, p) for p in parameters]
+            # else:
+            #     params = None
 
-            response = requests.get(self.url, headers=headers, params=params)
-            response.raise_for_status()  # raises an error on bad status codes (4xx, 5xx)
+            response = requests.get(self.url, headers=headers, params={param_name: parameters})
+            response.raise_for_status()
             return response.json()["response"]
 
         except requests.exceptions.HTTPError as e:
@@ -50,13 +49,14 @@ class ETL_Raw():
         except KeyError:
             log_error(f"Unexpected response format from {self.url}")
 
-        return []  # return empty list instead of None on failure
+        return []
 
 
 
     def first_extract_from_api(
         self,
-        schema: StructType = None, param_name: str = None, parameters: list = None
+        api_response: list,
+        schema: StructType = None,
     ) -> DataFrame:
         """
         Creates a Spark DataFrame from an API response list.
@@ -72,8 +72,8 @@ class ETL_Raw():
         Raises:
             ValueError: If api_response is empty or not a list
         """
-
-        api_response = self.fetch_api_data()
+        #self.fetch_api_data(param_name=param_name, parameters=parameters)
+        api_response = api_response
 
         if not isinstance(api_response, list):
             raise ValueError(f"api_response must be a list, got {type(api_response)}")
@@ -89,11 +89,28 @@ class ETL_Raw():
                     [json.dumps(row) for row in api_response]
                 )
                 df = self.spark.read.json(json_rdd)
-
             return df
 
         except Exception as e:
             raise RuntimeError(f"Failed to create DataFrame from API response: {e}")
+
+    def flatten_json(self, spark: SparkSession, array: list) -> DataFrame:
+        """Flatten an array of data
+
+        Args:
+            spark (SparkSession): Spark session
+            array (list): array of data in the following format : [[{}], [{}]]
+
+        Returns:
+            DataFrame: Returns Spark DataFrame.
+        """
+        try:
+            cleaned_array = [x for x in array if x != []]
+            flatten_array = [row for sub in cleaned_array for row in sub]
+
+            return flatten_array
+        except:
+            log_error("Error creating dataframe from array.")
 
     def write_to_raw(self, df: DataFrame, base_path: str = None) -> None:
         """
